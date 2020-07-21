@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments :: header"/>
+<body style="padding-top:50px;">
+<div class="container" style="width: 45%; margin: 0 auto; border:3px solid blue; border-radius: 20px; padding:20px 30px 30px 30px; background-color: #2a4960; color:white;">
+<div sec:authorize="isAuthenticated()" class="row">
+			  <div class="col-md-2">
+			  	<a th:href="@{/}" class="btn btn-primary"><i class="fa fa-arrow-left"> <span th:text="#{msg.back}">Nazad</span></i></a>
+			  </div>
+			<div class="col-md-5" style="padding-bottom: 10px; padding-top:6px;">
+				<span th:text="#{msg.currentUser}">Ulogirani ste kao</span> <span sec:authentication="name" style="font-weight:bold;">Korisnik</span>.
+			</div>
+			  <div class="col-md-3" style="text-align:right;">
+			  	<div class="form-group">
+					<select id="locales" class="form-control">
+						<option value="hr" th:selected="${#locale.language == 'hr'}" th:text="#{msg.lang.hr}"></option>
+						<option value="en" th:selected="${#locale.language == 'en'}" th:text="#{msg.lang.en}"></option>
+					</select>
+			  	</div>
+			  </div>
+			<div class="col-md-2" style="text-align:right;">
+				<form method="POST" th:action="@{/logout}">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+					<button type="submit" class="btn btn-danger" ><i class="fa fa-sign-out"> <span th:text="#{msg.logout}"> Logout</span></i></button>
+				</form>
+			</div>
+		</div>
+  <div class="row">
+	<div class="col-md-12">
+<h2 th:text="#{msg.expenseSaved}">Trošak unesen!</h2>
+<p th:text="#{msg.message1-1} + ' ' + ${trosak.naziv} + ' ' + #{msg.message1-2} + ' ' + ${trosak.iznos} + ' kn.'" />
+<p th:text="#{msg.message2-1} + ' ' + ${trosak.vrstaTroska} + ' ' + #{msg.message2-2} + ' ' + ${currentDate} + '.'" />
+<p th:text="#{msg.message3-1} + ' ' + ${novcanik.naziv} + ' ' + #{msg.message3-2} + ' ' + ${iznos} + ' kn.'" />
+<br/>
+<a th:href="@{/expenses/new}" class="btn btn-primary"><i class="fa fa-plus"> <span th:text="#{msg.newExpenseButton}">Novi trošak</span></i></a>
+<span sec:authorize="hasRole('ROLE_ADMIN')">
+	<a th:href="@{/expenses/resetWallet}" class="btn btn-danger"><i class="fa fa-minus-circle"> <span th:text="#{msg.resetWallet}">Resetiraj novčanik</span></i></a>
+</span>
+<a th:href="@{/expenses/search}" class="btn btn-warning"><i class="fa fa-search"> <span th:text="#{msg.expenseSearchButton}">Pretraži troškove</span></i></a>
+</div>
+</div>
+</div>
+</body>
+</html>

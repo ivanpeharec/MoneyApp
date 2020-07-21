@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+	<head th:fragment="header">
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<title>MoneyApp</title>
+		<script type="application/javascript">
+			$(document).ready(function() {
+				$("#locales").change(function () {
+					var selectedOption = $('#locales').val();
+					if (selectedOption != ''){
+						window.location.replace('?language=' + selectedOption);
+					}
+				});
+			});
+		</script>
+	</head>
+</body>
+</html>

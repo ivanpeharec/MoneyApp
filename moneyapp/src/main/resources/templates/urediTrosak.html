@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments :: header"/>
+<body style="padding-top:50px;">
+<div class="container" style="width: 45%; margin: 0 auto; border:3px solid blue; border-radius: 20px; padding:20px 30px 30px 30px; background-color: #2a4960; color:white;">
+<div sec:authorize="isAuthenticated()" class="row">
+			  <div class="col-md-2">
+			  	<a th:href="@{/}" class="btn btn-primary"><i class="fa fa-arrow-left"> <span th:text="#{msg.back}">Nazad</span></i></a>
+			  </div>
+			<div class="col-md-5" style="padding-bottom: 10px; padding-top:6px;">
+				<span th:text="#{msg.currentUser}">Ulogirani ste kao</span> <span sec:authentication="name" style="font-weight:bold;">Korisnik</span>.
+			</div>
+			  <div class="col-md-3" style="text-align:right;">
+			  	<div class="form-group">
+					<select id="locales" class="form-control">
+						<option value="hr" th:selected="${#locale.language == 'hr'}" th:text="#{msg.lang.hr}"></option>
+						<option value="en" th:selected="${#locale.language == 'en'}" th:text="#{msg.lang.en}"></option>
+					</select>
+			  	</div>
+			  </div>
+			<div class="col-md-2" style="text-align:right;">
+				<form method="POST" th:action="@{/logout}">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+					<button type="submit" class="btn btn-danger" ><i class="fa fa-sign-out"> <span th:text="#{msg.logout}"> Logout</span></i></button>
+				</form>
+			</div>
+		</div>
+  <div class="row">
+	<div class="col-md-12">
+		<h2 th:text="#{msg.expenseEditing}">Uređivanje troška</h2>
+		<form method="post" th:object="${trosak}" th:action="@{/expenses/edit}">
+		  <div class="form-group">
+		    <label for="naziv" th:text="#{msg.expense.name}">Naziv:</label>
+		    <input type="text" class="form-control" id="naziv" placeholder="Unesite ime troška" th:field="*{naziv}" th:style="${#fields.hasErrors('naziv')} ? 'border: 1px solid red' : ''">
+		    <span class="validation-error" th:if="${#fields.hasErrors('naziv')}" th:errors="*{naziv}">Trosak naziv error</span>
+		  </div>
+		  <div class="form-group">
+		    <label for="vrstaTroska" th:text="#{msg.expense.type}">Vrsta troška:</label>
+		    <select th:field="*{vrstaTroska}" class="form-control" th:style="${#fields.hasErrors('vrstaTroska')} ? 'border: 1px solid red' : ''">
+				<option value="" >---Odaberite vrijednost---</option>
+				<option th:each="vrsta : ${vrste}" th:value="${vrsta}" th:text="${vrsta}"></option>
+			</select>
+		    <span class="validation-error" th:if="${#fields.hasErrors('vrstaTroska')}" th:errors="*{vrstaTroska}">Trosak vrsta error</span>
+		  </div>
+		  <div class="form-group">
+		    <label for="iznos" th:text="#{msg.expense.amount}">Iznos:</label>
+		    <input type="number" placeholder="0.00" class="form-control" th:field="*{iznos}" th:style="${#fields.hasErrors('iznos')} ? 'border: 1px solid red' : ''">
+		  	<span class="validation-error" th:if="${#fields.hasErrors('iznos')}" th:errors="*{iznos}">Trosak iznos error</span>
+		  </div>
+		  <input type="hidden" th:field="*{id}">
+		  <input type="hidden" th:field="*{createDate}">
+		  <input type="hidden" th:field="*{novcanik}">
+		  <button type="submit" value="Spremi" class="btn btn-primary"><i class="fa fa-floppy-o"> <span th:text="#{msg.save}">Spremi</span></i></button>
+		</form>
+	</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments :: header"/>
+<body style="padding-top: 50px;">
+	<div class="container" style="width: 45%; margin: 0 auto; border:3px solid blue; border-radius: 20px; padding:20px 30px 30px 30px; background-color: #2a4960; color:white;">
+		<div sec:authorize="isAuthenticated()" class="row">
+			<div class="col-md-7" style="padding-top:6px;">
+				<span th:text="#{msg.currentUser}">Ulogirani ste kao</span> <span sec:authentication="name" style="font-weight:bold;">Korisnik</span>.
+			</div>
+			<div class="col-md-3" style="text-align:right;">
+				<div class="form-group">
+					<select id="locales" class="form-control">
+						<option value="hr" th:selected="${#locale.language == 'hr'}" th:text="#{msg.lang.hr}"></option>
+						<option value="en" th:selected="${#locale.language == 'en'}" th:text="#{msg.lang.en}"></option>
+					</select>
+			  	</div>
+			</div>
+			<div class="col-md-2" style="text-align:right;">
+				<form method="POST" th:action="@{/logout}">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+					<button type="submit" class="btn btn-danger" ><i class="fa fa-sign-out"> <span th:text="#{msg.logout}"> Logout</span></i></button>
+				</form>
+			</div>
+		</div>
+		<div sec:authorize="!isAuthenticated()" class="row">
+			<div class="col-md-6">
+				<span th:text="#{msg.notLoggedIn}">Niste ulogirani.</span>
+			</div>
+			<div class="col-md-6" style="text-align:right;">
+				<a th:href="@{/login}" class="btn btn-warning"><i class="fa fa-sign-in"> <span th:text="#{msg.login}">Ulogiraj se</span></i></a>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-md-12">
+				<h1 th:text="#{msg.welcome}">Dobrodošli na MoneyApp!</h1>
+				<br/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<span sec:authorize="isAuthenticated()">
+					<a th:href="@{/expenses/new}" class="btn btn-primary"><i class="fa fa-plus"> <span th:text="#{msg.newExpenseButton}">Novi trošak</span></i></a>
+				</span>
+				<span sec:authorize="isAuthenticated()">
+					<a th:href="@{/expenses/search}" class="btn btn-warning"><i class="fa fa-search"> <span th:text="#{msg.expenseSearchButton}">Pretraži troškove</span></i></a>
+				</span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

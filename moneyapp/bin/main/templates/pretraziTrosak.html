@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments :: header"/>
+<body style="padding-top:50px;">
+<div class="container" style="width: 45%; margin: 0 auto; border:3px solid blue; border-radius: 20px; padding:20px 30px 30px 30px; background-color: #2a4960; color:white;">
+	    <div sec:authorize="isAuthenticated()" class="row">
+			  <div class="col-md-2">
+			  	<a th:href="@{/}" class="btn btn-primary"><i class="fa fa-arrow-left"> <span th:text="#{msg.back}">Nazad</span></i></a>
+			  </div>
+			<div class="col-md-5" style="padding-bottom: 10px; padding-top:6px;">
+				<span th:text="#{msg.currentUser}">Ulogirani ste kao</span> <span sec:authentication="name" style="font-weight:bold;">Korisnik</span>.
+			</div>
+			  <div class="col-md-3" style="text-align:right;">
+			  	<div class="form-group">
+					<select id="locales" class="form-control">
+						<option value="hr" th:selected="${#locale.language == 'hr'}" th:text="#{msg.lang.hr}"></option>
+						<option value="en" th:selected="${#locale.language == 'en'}" th:text="#{msg.lang.en}"></option>
+					</select>
+			  	</div>
+			  </div>
+			<div class="col-md-2" style="text-align:right;">
+				<form method="POST" th:action="@{/logout}">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+					<button type="submit" class="btn btn-danger" ><i class="fa fa-sign-out"> <span th:text="#{msg.logout}"> Logout</span></i></button>
+				</form>
+			</div>
+		</div>
+  		<div sec:authorize="isAuthenticated()" class="row">
+			<br/>
+		</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h2 th:text="#{msg.expenseSearchButton}">Pretraživanje troškova</h2>
+			<form method="POST" th:object="${trosak}" th:action="@{/expenses/search}">
+				<div class="form-group">
+			    	<label for="naziv" th:text="#{msg.expense.name}">Naziv:</label>
+        			<div class="input-group">
+			    		<input type="text" class="form-control" id="naziv" placeholder="Unesite ime troška" th:field="*{naziv}">
+			    		<span class="input-group-addon">
+			  				<button type="submit" class="btn btn-primary"><i class="fa fa-search"> <span th:text="#{msg.searchButton}">Search</span></i></button>
+			  			</span>
+			    	</div>
+			  	</div>
+			  	<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+			</form>
+		</div>
+		<div th:if="${not #lists.isEmpty(listaTroskova)}" class="col-md-12">
+			<br/>	
+			<table class="table table-bordered table-dark">
+				<thead>
+			    	<tr>
+			      		<th scope="col" th:text="#{msg.expense.name}" width="31%">Naziv</th>
+			      		<th scope="col" th:text="#{msg.expense.type}" width="23%">Vrsta</th>
+					    <th scope="col" th:text="#{msg.expense.amount}" width="23%">Iznos (HRK)</th>
+					    <th scope="col" th:text="#{msg.editing}" width="23%"></th>
+			    	</tr>
+			  	</thead>
+			  	<tbody>
+			    	<tr th:each="trosak : ${listaTroskova}">
+			      		<td scope="row" th:text="${trosak.naziv}" style="vertical-align: middle;" width="31%"></td>
+			      		<td th:text="${trosak.vrstaTroska}" style="vertical-align: middle;" width="23%"></td>
+			      		<td th:text="${#numbers.formatDecimal(trosak.iznos, 0, 'COMMA', 2, 'POINT')}" style="vertical-align: middle;" width="23%"></td>
+			      		<td style="vertical-align: middle;"><a th:href="@{'/expenses/edit/' + ${trosak.id}}" class="btn btn-warning" width="23%"><i class="fa fa-pencil"> <span th:text="#{msg.edit}">Uredi</span></i></a></td>
+			    	</tr>
+			  	</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>
